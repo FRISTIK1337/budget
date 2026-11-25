@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17171d">
+  <meta name="description" content="VELORA — стильный личный финансовый кабинет для учета доходов, расходов и регулярных платежей.">
+  <title>VELORA — личные финансы</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="VELORA — главная">
+        <span class="brand-mark"><span></span></span>
+        <span class="brand-copy"><strong>VELORA</strong><small>FINANCE STUDIO</small></span>
+      </a>
+
+      <div class="sidebar-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <button class="nav-link active" data-view="overview"><span class="nav-icon">◫</span><span>Обзор</span></button>
+        <button class="nav-link" data-view="transactions"><span class="nav-icon">↗</span><span>Операции</span></button>
+        <button class="nav-link" data-view="recurring"><span class="nav-icon">↻</span><span>Регулярные платежи</span><span class="nav-count" id="recurringNavCount">0</span></button>
+        <button class="nav-link" data-view="categories"><span class="nav-icon">◈</span><span>Категории</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <span class="note-sparkle">✦</span>
+          <p>Финансовая ясность начинается с маленьких привычек.</p>
+          <span class="note-caption">YOUR MONEY, IN BALANCE</span>
+        </div>
+        <button class="nav-link settings-link" data-view="settings"><span class="nav-icon">⚙</span><span>Настройки</span></button>
+        <div class="profile-chip">
+          <div class="profile-avatar">V</div>
+          <div><strong>Мой кабинет</strong><small>Личные финансы</small></div>
+          <span class="profile-dot"></span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-context"><span>PERSONAL FINANCE</span><i>/</i><strong id="topbarPageName">ОБЗОР</strong></div>
+        <div class="topbar-actions">
+          <div class="today-chip"><span class="today-dot"></span><span id="todayLabel"></span></div>
+          <button class="button button-primary top-add" data-action="add-transaction"><span>＋</span> Добавить операцию</button>
+          <button class="icon-button mobile-settings" data-view="settings" aria-label="Настройки">⚙</button>
+          <button class="icon-button mobile-add" data-action="add-transaction" aria-label="Добавить операцию">＋</button>
+        </div>
+      </header>
+
+      <!-- OVERVIEW -->
+      <section class="view active" id="view-overview">
+        <div class="welcome-row">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> ВАШ ФИНАНСОВЫЙ РИТМ</div>
+            <h1>Деньги любят <em>порядок.</em></h1>
+            <p class="subheading">Все важное о ваших финансах — в одном красивом пространстве.</p>
+          </div>
+          <div class="period-control" role="group" aria-label="Период отчета">
+            <button class="period-button" data-period="day">День</button>
+            <button class="period-button" data-period="week">Неделя</button>
+            <button class="period-button active" data-period="month">Месяц</button>
+            <button class="period-button" data-period="year">Год</button>
+          </div>
+        </div>
+        <div class="month-navigator" aria-label="Выбор месяца"><button class="month-arrow" data-month-shift="-1" aria-label="Предыдущий месяц">‹</button><div><strong id="selectedMonthLabel">Текущий месяц</strong><small id="selectedMonthHint">История операций по месяцам</small></div><button class="month-arrow" data-month-shift="1" aria-label="Следующий месяц">›</button><button class="month-today" data-month-current>Сегодня</button></div>
+
+        <div class="stats-grid">
+          <article class="stat-card balance-card">
+            <div class="stat-card-top"><span class="stat-label">ОСТАТОК СРЕДСТВ</span><span class="stat-icon balance-icon">✧</span></div>
+            <div class="stat-value" id="balanceValue">0</div>
+            <div class="stat-foot"><span class="trend-pill" id="balanceTrend">↗</span><span id="balanceCaption">Все доходы минус все расходы</span></div>
+            <div class="balance-decoration"></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-card-top"><span class="stat-label">ДОХОДЫ</span><span class="stat-icon income-icon">↙</span></div>
+            <div class="stat-value" id="incomeValue">0</div>
+            <div class="stat-foot"><span class="stat-dot income-dot"></span><span id="incomeCaption">За выбранный период</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-card-top"><span class="stat-label">РАСХОДЫ</span><span class="stat-icon expense-icon">↗</span></div>
+            <div class="stat-value" id="expenseValue">0</div>
+            <div class="stat-foot"><span class="stat-dot expense-dot"></span><span id="expenseCaption">За выбранный период</span></div>
+          </article>
+          <article class="stat-card savings-card">
+            <div class="stat-card-top"><span class="stat-label">ДОЛЯ СОХРАНЕННЫХ СРЕДСТВ</span><span class="stat-icon savings-icon">◎</span></div>
+            <div class="stat-value" id="savingsValue">0%</div>
+            <div class="savings-track"><span id="savingsTrack"></span></div>
+            <div class="stat-foot"><span id="savingsCaption">От доходов за период</span></div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div><div class="eyebrow small-eyebrow">АНАЛИТИКА</div><h2>Движение средств</h2></div>
+              <div class="chart-legend"><span><i class="legend-income"></i> Доходы</span><span><i class="legend-expense"></i> Расходы</span></div>
+            </div>
+            <div class="chart-summary"><strong id="chartBalance">0</strong><span id="chartPeriodLabel">За этот месяц</span></div>
+            <div class="bar-chart-wrap"><canvas id="cashflowChart" aria-label="График доходов и расходов" role="img"></canvas></div>
+          </article>
+
+          <article class="panel category-panel">
+            <div class="panel-heading">
+              <div><div class="eyebrow small-eyebrow">СТРУКТУРА</div><h2>Куда уходят деньги</h2></div>
+              <button class="text-button" data-view="categories">Категории <span>↗</span></button>
+            </div>
+            <div class="donut-area">
+              <div class="donut-chart" id="expenseDonut"><div class="donut-hole"><strong id="donutTotal">0</strong><span>расходы</span></div></div>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+            <div class="empty-inline hidden" id="donutEmpty">Добавьте расходы, чтобы увидеть аналитику.</div>
+          </article>
+        </div>
+
+        <section class="panel recent-panel">
+          <div class="panel-heading recent-heading">
+            <div><div class="eyebrow small-eyebrow">ПОСЛЕДНИЕ ЗАПИСИ</div><h2>Недавние операции</h2></div>
+            <button class="text-button" data-view="transactions">Все операции <span>↗</span></button>
+          </div>
+          <div class="transaction-table-head"><span>ОПЕРАЦИЯ</span><span>КАТЕГОРИЯ</span><span>ДАТА</span><span class="align-right">СУММА</span><span></span></div>
+          <div id="recentTransactions" class="transaction-list"></div>
+        </section>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section class="view" id="view-transactions">
+        <div class="page-heading-row">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> ИСТОРИЯ ДВИЖЕНИЯ СРЕДСТВ</div><h1>Операции</h1><p class="subheading">Каждая запись помогает видеть общую картину.</p></div>
+          <button class="button button-primary" data-action="add-transaction">＋ Новая операция</button>
+        </div>
+        <div class="panel transactions-panel">
+          <div class="transaction-toolbar">
+            <div class="period-control compact-period" role="group" aria-label="Период операций">
+              <button class="period-button" data-period="day">День</button><button class="period-button" data-period="week">Неделя</button><button class="period-button active" data-period="month">Месяц</button><button class="period-button" data-period="year">Год</button>
+            </div>
+            <div class="filters-row">
+              <label class="search-box"><span>⌕</span><input id="transactionSearch" type="search" placeholder="Поиск операции"></label>
+              <select id="transactionTypeFilter" aria-label="Тип операции"><option value="all">Все операции</option><option value="income">Доходы</option><option value="expense">Расходы</option></select>
+              <select id="transactionCategoryFilter" aria-label="Категория"><option value="all">Все категории</option></select>
+            </div>
+          </div>
+          <div class="transactions-summary"><span id="transactionCount">0 операций</span><span id="transactionsTotal"></span></div>
+          <div class="transaction-table-head"><span>ОПЕРАЦИЯ</span><span>КАТЕГОРИЯ</span><span>ДАТА</span><span class="align-right">СУММА</span><span></span></div>
+          <div id="allTransactions" class="transaction-list"></div>
+          <div class="empty-state hidden" id="transactionsEmpty"><div class="empty-art">✧</div><h3>Пока здесь тихо</h3><p>Добавьте первую операцию или измените фильтры.</p><button class="button button-primary" data-action="add-transaction">Добавить операцию</button></div>
+        </div>
+      </section>
+
+      <!-- RECURRING -->
+      <section class="view" id="view-recurring">
+        <div class="page-heading-row">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> ПЛАТЕЖИ ПО РАСПИСАНИЮ</div><h1>Регулярные платежи</h1><p class="subheading">Коммунальные услуги, подписки и другие повторяющиеся расходы.</p></div>
+          <button class="button button-primary" data-action="add-recurring">＋ Добавить платеж</button>
+        </div>
+        <div class="recurring-overview-grid">
+          <article class="recurring-overview-card"><span class="stat-label">ЕЖЕМЕСЯЧНАЯ НАГРУЗКА</span><strong id="monthlyRecurringTotal">0</strong><small>Активные платежи в пересчете на месяц</small></article>
+          <article class="recurring-overview-card"><span class="stat-label">АКТИВНЫЕ ПЛАТЕЖИ</span><strong id="activeRecurringCount">0</strong><small>Регулярные списания под контролем</small></article>
+          <article class="recurring-overview-card"><span class="stat-label">БЛИЖАЙШИЙ ПЛАТЕЖ</span><strong id="nextRecurringDate">—</strong><small id="nextRecurringName">Нет запланированных платежей</small></article>
+        </div>
+        <div class="section-title-row"><div><div class="eyebrow small-eyebrow">ВАШ КАЛЕНДАРЬ ОБЯЗАТЕЛЬСТВ</div><h2>Запланированные платежи</h2></div><span class="subtle-counter" id="recurringCountLabel">0 платежей</span></div>
+        <div id="recurringList" class="recurring-list"></div>
+        <div class="empty-state hidden" id="recurringEmpty"><div class="empty-art">↻</div><h3>Регулярных платежей пока нет</h3><p>Добавьте, например, интернет, аренду или коммунальные услуги.</p><button class="button button-primary" data-action="add-recurring">Добавить первый платеж</button></div>
+      </section>
+
+      <!-- CATEGORIES -->
+      <section class="view" id="view-categories">
+        <div class="page-heading-row">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> СИСТЕМА УЧЕТА</div><h1>Категории</h1><p class="subheading">Настройте структуру доходов и расходов под свой образ жизни.</p></div>
+          <button class="button button-primary" data-action="add-category">＋ Новая категория</button>
+        </div>
+        <div class="category-management-grid">
+          <section class="panel category-management-panel"><div class="panel-heading"><div><div class="eyebrow small-eyebrow">OUTGOING</div><h2>Расходы</h2></div><span class="category-number" id="expenseCategoryCount">0</span></div><div class="managed-category-list" id="expenseCategoryList"></div></section>
+          <section class="panel category-management-panel"><div class="panel-heading"><div><div class="eyebrow small-eyebrow">INCOMING</div><h2>Доходы</h2></div><span class="category-number" id="incomeCategoryCount">0</span></div><div class="managed-category-list" id="incomeCategoryList"></div></section>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="page-heading-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> ПЕРСОНАЛИЗАЦИЯ</div><h1>Настройки</h1><p class="subheading">Небольшие детали, которые делают кабинет вашим.</p></div></div>
+        <div class="settings-grid">
+          <section class="panel settings-panel"><div class="settings-icon">₽</div><div class="settings-copy"><h2>Валюта</h2><p>Все суммы отображаются в российских рублях.</p></div><strong class="settings-fixed-value">RUB · ₽</strong><select id="currencySelect" hidden><option value="RUB">RUB</option></select></section>
+          <section class="panel settings-panel"><div class="settings-icon">◐</div><div class="settings-copy"><h2>Оформление</h2><p>Выберите комфортную тему для работы днём и вечером.</p></div><button class="button button-outline" data-theme-toggle>☀ Включить светлую тему</button></section>
+          <section class="panel settings-panel"><div class="settings-icon">⇩</div><div class="settings-copy"><h2>Экспорт операций</h2><p>Скачайте таблицу CSV, которую можно открыть в Excel или Google Sheets.</p></div><button class="button button-outline" data-action="export-csv">Экспортировать CSV</button></section>
+          <section class="panel settings-panel"><div class="settings-icon">◫</div><div class="settings-copy"><h2>Резервная копия</h2><p>Сохраните все операции, категории и регулярные платежи в одном JSON-файле.</p></div><div class="settings-buttons"><button class="button button-outline" data-action="export-backup">Скачать копию</button><button class="button button-soft" data-action="import-backup">Импортировать</button><input type="file" id="backupFile" accept=".json,application/json" hidden></div></section>
+          <section class="panel privacy-panel"><div class="privacy-mark">✦</div><div><h2>Ваши данные остаются у вас</h2><p>Этот сайт сохраняет информацию локально в браузере на вашем устройстве. Данные не отправляются на сервер и не синхронизируются между устройствами автоматически. Регулярно создавайте резервную копию.</p></div></section>
+        </div>
+        <div class="app-version">VELORA FINANCE STUDIO <span>·</span> VERSION 1.0</div>
+      </section>
+
+      <footer class="app-footer"><span>VELORA FINANCE STUDIO</span><span>СОЗДАНО ДЛЯ ФИНАНСОВОЙ ЯСНОСТИ <b>✦</b></span></footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Навигация">
+    <button class="mobile-nav-link active" data-view="overview"><span>◫</span><small>Обзор</small></button>
+    <button class="mobile-nav-link" data-view="transactions"><span>↗</span><small>Операции</small></button>
+    <button class="mobile-nav-link mobile-nav-add" data-action="add-transaction" aria-label="Добавить операцию"><span>＋</span></button>
+    <button class="mobile-nav-link" data-view="recurring"><span>↻</span><small>Платежи</small></button>
+    <button class="mobile-nav-link" data-view="categories"><span>◈</span><small>Категории</small></button>
+  </nav>
+
+  <!-- TRANSACTION MODAL -->
+  <div class="modal-backdrop" id="transactionModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="transactionModalTitle">
+      <div class="modal-heading"><div><div class="eyebrow small-eyebrow">НОВАЯ ЗАПИСЬ</div><h2 id="transactionModalTitle">Добавить операцию</h2></div><button class="modal-close" data-action="close-modal" aria-label="Закрыть">×</button></div>
+      <form id="transactionForm">
+        <input type="hidden" id="transactionId">
+        <div class="type-switch"><button type="button" class="type-option active" data-transaction-type="expense">Расход</button><button type="button" class="type-option" data-transaction-type="income">Доход</button></div>
+        <label class="form-label">Сумма <span>*</span><div class="amount-field"><input id="transactionAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required><span id="amountCurrency">zł</span></div></label>
+        <div class="form-grid"><label class="form-label">Категория <span>*</span><select id="transactionCategory" required></select></label><label class="form-label">Дата покупки <span>*</span><input id="transactionDate" type="date" required></label></div>
+        <label class="form-label">Время покупки <span>*</span><input id="transactionTime" type="time" required></label>
+        <section class="items-editor" id="itemsEditor">
+          <div class="items-editor-head"><div><strong>Детализация покупки</strong><small>Например: огурцы, молоко, хлеб</small></div><button type="button" class="button button-soft button-small" id="addItemRow">＋ Добавить товар</button></div>
+          <div id="itemRows" class="item-rows"></div>
+          <div class="items-total" id="itemsTotal">Сумма товаров автоматически попадёт в операцию</div>
+        </section>
+        <label class="form-label">Комментарий <small>(необязательно)</small><input id="transactionNote" type="text" maxlength="90" placeholder="Например, покупки на неделю"></label>
+        <div class="modal-actions"><button type="button" class="button button-outline" data-action="close-modal">Отмена</button><button type="submit" class="button button-primary">Сохранить операцию</button></div>
+      </form>
+    </section>
+  </div>
+
+  <!-- RECURRING MODAL -->
+  <div class="modal-backdrop" id="recurringModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="recurringModalTitle">
+      <div class="modal-heading"><div><div class="eyebrow small-eyebrow">ПЛАТЕЖ ПО РАСПИСАНИЮ</div><h2 id="recurringModalTitle">Добавить платеж</h2></div><button class="modal-close" data-action="close-modal" aria-label="Закрыть">×</button></div>
+      <form id="recurringForm">
+        <input type="hidden" id="recurringId">
+        <label class="form-label">Название платежа <span>*</span><input id="recurringName" type="text" maxlength="60" placeholder="Например, домашний интернет" required></label>
+        <div class="form-grid"><label class="form-label">Сумма <span>*</span><div class="amount-field"><input id="recurringAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required><span id="recurringCurrency">zł</span></div></label><label class="form-label">Категория <span>*</span><select id="recurringCategory" required></select></label></div>
+        <div class="form-grid"><label class="form-label">Повторять <select id="recurringFrequency"><option value="monthly">Ежемесячно</option><option value="weekly">Еженедельно</option><option value="yearly">Ежегодно</option></select></label><label class="form-label">Следующая дата <span>*</span><input id="recurringNextDate" type="date" required></label></div>
+        <div class="modal-actions"><button type="button" class="button button-outline" data-action="close-modal">Отмена</button><button type="submit" class="button button-primary">Сохранить платеж</button></div>
+      </form>
+    </section>
+  </div>
+
+  <!-- CATEGORY MODAL -->
+  <div class="modal-backdrop" id="categoryModal" aria-hidden="true">
+    <section class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
+      <div class="modal-heading"><div><div class="eyebrow small-eyebrow">ВАША СТРУКТУРА</div><h2 id="categoryModalTitle">Новая категория</h2></div><button class="modal-close" data-action="close-modal" aria-label="Закрыть">×</button></div>
+      <form id="categoryForm">
+        <input type="hidden" id="categoryId">
+        <label class="form-label">Название <span>*</span><input id="categoryName" type="text" maxlength="30" placeholder="Например, Кофе" required></label>
+        <div class="form-grid"><label class="form-label">Тип<select id="categoryType"><option value="expense">Расход</option><option value="income">Доход</option></select></label><label class="form-label">Значок<input id="categoryIcon" type="text" maxlength="4" placeholder="✦" value="✦"></label></div>
+        <label class="form-label">Цвет<select id="categoryColor"><option value="#c79d71">Шампань</option><option value="#a98ba7">Лиловый</option><option value="#83a69a">Шалфей</option><option value="#d18f91">Розовый</option><option value="#8198b7">Голубой</option><option value="#b4a16f">Оливковый</option><option value="#9a8b82">Тауп</option></select></label>
+        <div class="modal-actions"><button type="button" class="button button-outline" data-action="close-modal">Отмена</button><button type="submit" class="button button-primary">Сохранить</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
